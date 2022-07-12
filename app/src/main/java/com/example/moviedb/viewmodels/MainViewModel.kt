@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviedb.repository.MainRepository
 import com.example.moviedb.util.Resource
-import com.james54.moviedatabase.models.MovieResponse
-import com.james54.moviedatabase.models.UpcomingMovieResponse
+import com.example.moviedb.models.MovieResponse
+import com.example.moviedb.models.UpcomingMovieResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +18,7 @@ class MainViewModel @Inject constructor(
 ): ViewModel() {
 
     sealed class MovieStates{
-        class Success(val movieList:MovieResponse): MovieStates()
+        class Success(val movieList: MovieResponse): MovieStates()
         class SuccessUpcoming(val movieList: UpcomingMovieResponse): MovieStates()
         class Failure(val message:String): MovieStates()
         object Loading: MovieStates()

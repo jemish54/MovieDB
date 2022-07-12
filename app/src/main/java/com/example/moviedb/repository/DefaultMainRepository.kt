@@ -2,8 +2,8 @@ package com.example.moviedb.repository
 
 import com.example.moviedb.network.MovieApi
 import com.example.moviedb.util.Resource
-import com.james54.moviedatabase.models.MovieResponse
-import com.james54.moviedatabase.models.UpcomingMovieResponse
+import com.example.moviedb.models.MovieResponse
+import com.example.moviedb.models.UpcomingMovieResponse
 import java.lang.Exception
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package com.james54.moviedatabase.models
+package com.example.moviedb.models
 
 data class Movie(
     val adult: Boolean,

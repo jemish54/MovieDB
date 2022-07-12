@@ -1,8 +1,8 @@
 package com.example.moviedb.network
 
 import com.example.moviedb.util.Constants.Companion.API_KEY
-import com.james54.moviedatabase.models.MovieResponse
-import com.james54.moviedatabase.models.UpcomingMovieResponse
+import com.example.moviedb.models.MovieResponse
+import com.example.moviedb.models.UpcomingMovieResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
