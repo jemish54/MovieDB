@@ -42,9 +42,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             MovieDBTheme {
                 val tabs = listOf(
-                    TabItem.MovieScreen(viewModel = viewModel),
-                    TabItem.SeriesScreen(viewModel = viewModel),
-                    TabItem.MyListScreen(),
+                    TabItem.MovieScreenTab(viewModel = viewModel),
+                    TabItem.SeriesScreenTab(viewModel = viewModel),
+                    TabItem.MyListScreenTab(),
                 )
                 val pagerState = rememberPagerState()
                 Scaffold {
@@ -86,67 +86,6 @@ fun TabIndicator(tabs: List<TabItem>, pagerState: PagerState) {
                     else MaterialTheme.colors.onBackground,
             )
         }
-    }
-}
-
-@Composable
-fun MoviesScreen(viewModel: MainViewModel) {
-    MoviesList(viewModel = viewModel)
-}
-
-@Composable
-fun SeriesScreen(viewModel: MainViewModel) {
-    Text("SERIES SCREEN", modifier = Modifier.fillMaxSize())
-}
-
-@Composable
-fun WatchList() {
-    Text("WATCH LIST", modifier = Modifier.fillMaxSize())
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun MoviesList(viewModel: MainViewModel) {
-    when (val data = viewModel.popularMovies.collectAsState().value) {
-        MainViewModel.MovieStates.Empty -> {}
-        is MainViewModel.MovieStates.Failure -> {
-            Box(contentAlignment = Alignment.Center) {
-                Text(data.message)
-            }
-        }
-        MainViewModel.MovieStates.Loading -> {
-            Box(contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        }
-        is MainViewModel.MovieStates.Success -> {
-            LazyVerticalGrid(
-                contentPadding = PaddingValues(20.dp),
-                cells = GridCells.Adaptive(180.dp)
-            ) {
-                items(items = data.movieList.results) {
-                    MovieCard(it)
-                }
-            }
-        }
-        //Only for Upcoming(Not Released) movie list
-        is MainViewModel.MovieStates.SuccessUpcoming -> {}
-    }
-}
-
-@Composable
-fun MovieCard(movie: Movie) {
-    Card(
-        shape = RoundedCornerShape(16.dp),
-        elevation = 4.dp,
-        modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp)
-    ) {
-        AsyncImage(
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillWidth,
-            model = "$IMAGE_BASE${movie.poster_path}",
-            contentDescription = "Movie Thumbnail"
-        )
     }
 }
 
