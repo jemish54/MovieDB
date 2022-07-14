@@ -1,10 +1,7 @@
 package com.example.moviedb.repository
 
+import com.example.moviedb.models.*
 import com.example.moviedb.util.Resource
-import com.example.moviedb.models.MovieResponse
-import com.example.moviedb.models.Series
-import com.example.moviedb.models.SeriesResponse
-import com.example.moviedb.models.UpcomingMovieResponse
 
 interface MainRepository {
 
@@ -17,5 +14,7 @@ interface MainRepository {
     suspend fun getPopularSeries(): Resource<SeriesResponse>
 
     suspend fun getTopRatedSeries():Resource<SeriesResponse>
+
+    suspend fun searchKeyword(query:String):Resource<SearchResponse>
 
 }

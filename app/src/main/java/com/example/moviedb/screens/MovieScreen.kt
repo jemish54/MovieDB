@@ -19,7 +19,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
 import com.example.moviedb.models.Movie
 import com.example.moviedb.screens.composables.MovieCard
 import com.example.moviedb.util.Constants.Companion.IMAGE_BASE
@@ -65,7 +67,7 @@ fun HorizontalPagerWithDecoration(upcomingMovieList: List<Movie>) {
         contentPadding = PaddingValues(horizontal = 100.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .height(250.dp),
+            .aspectRatio(1.5f)
     ) { page ->
         Card(
             shape = RoundedCornerShape(8.dp),

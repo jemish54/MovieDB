@@ -50,7 +50,7 @@ fun TopRatedSection(viewModel: MainViewModel) {
             }
         }
         is MainViewModel.SeriesStates.Success -> {
-            HorizontalPagerWithDecoration(seriesList = data.movieList.results)
+            HorizontalPagerWithDecoration(seriesList = data.seriesList.results)
         }
     }
 }
@@ -63,7 +63,7 @@ fun HorizontalPagerWithDecoration(seriesList: List<Series>) {
         contentPadding = PaddingValues(horizontal = 100.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .height(250.dp),
+            .aspectRatio(1.5f)
     ) { page ->
         Card(
             shape = RoundedCornerShape(8.dp),
@@ -140,7 +140,7 @@ fun PopularSeriesSection(viewModel: MainViewModel) {
                         modifier = Modifier.padding(20.dp),
                     )
                 }
-                items(items = data.movieList.results) {
+                items(items = data.seriesList.results) {
                     SeriesCard(series = it)
                 }
             }

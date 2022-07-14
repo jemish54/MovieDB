@@ -45,11 +45,13 @@ class MainActivity : ComponentActivity() {
                     TabItem.MovieScreenTab(viewModel = viewModel),
                     TabItem.SeriesScreenTab(viewModel = viewModel),
                     TabItem.MyListScreenTab(),
+                    TabItem.SearchScreenTab(viewModel = viewModel),
                 )
                 val pagerState = rememberPagerState()
                 Scaffold {
                     Column(modifier = Modifier.fillMaxSize()) {
                         TabNavigation(tabs = tabs, pagerState = pagerState)
+
                     }
                 }
             }
@@ -78,13 +80,29 @@ fun TabIndicator(tabs: List<TabItem>, pagerState: PagerState) {
             .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         tabs.forEachIndexed { index, tab ->
-            Text(
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
                 modifier = Modifier.clickable { scope.launch { pagerState.animateScrollToPage(index) } },
-                text = tab.title,
-                color =
-                    if (pagerState.currentPage == index) Color.Red
-                    else MaterialTheme.colors.onBackground,
-            )
+            ) {
+                tab.icon?.let {
+                    Icon(
+                        modifier = Modifier.size(28.dp),
+                        imageVector = it, contentDescription = "Search Icon",
+                        tint =
+                        if (pagerState.currentPage == index) Color.Red
+                        else MaterialTheme.colors.onBackground,
+                    )
+                }
+                tab.title?.let {
+                    Text(
+                        text = it,
+                        color =
+                        if (pagerState.currentPage == index) Color.Red
+                        else MaterialTheme.colors.onBackground,
+                    )
+                }
+            }
         }
     }
 }

@@ -2,12 +2,9 @@ package com.example.moviedb.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.moviedb.models.*
 import com.example.moviedb.repository.MainRepository
 import com.example.moviedb.util.Resource
-import com.example.moviedb.models.MovieResponse
-import com.example.moviedb.models.Series
-import com.example.moviedb.models.SeriesResponse
-import com.example.moviedb.models.UpcomingMovieResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,10 +25,17 @@ class MainViewModel @Inject constructor(
     }
 
     sealed class SeriesStates{
-        class Success(val movieList: SeriesResponse): SeriesStates()
+        class Success(val seriesList: SeriesResponse): SeriesStates()
         class Failure(val message:String): SeriesStates()
         object Loading: SeriesStates()
         object Empty: SeriesStates()
+    }
+
+    sealed class SearchStates{
+        class Success(val searchList: SearchResponse): SearchStates()
+        class Failure(val message:String): SearchStates()
+        object Loading: SearchStates()
+        object Empty: SearchStates()
     }
 
     private val _popularMovies = MutableStateFlow<MovieStates>(MovieStates.Empty)
@@ -48,6 +52,9 @@ class MainViewModel @Inject constructor(
 
     private val _topRatedSeries = MutableStateFlow<SeriesStates>(SeriesStates.Empty)
     val topRatedSeries:StateFlow<SeriesStates> = _topRatedSeries
+
+    private val _searchKeyword = MutableStateFlow<SearchStates>(SearchStates.Empty)
+    val searchKeyword:StateFlow<SearchStates> = _searchKeyword
 
     init {
         getPopularMovies()
@@ -104,6 +111,16 @@ class MainViewModel @Inject constructor(
                 _topRatedSeries.value = SeriesStates.Success(result.data!!)
             }
             is Resource.Error-> _topRatedSeries.value = SeriesStates.Failure(result.message!!)
+        }
+    }
+
+    fun searchKeyword(query:String) = viewModelScope.launch {
+        _searchKeyword.value = SearchStates.Loading
+        when(val result = mainRepository.searchKeyword(query)){
+            is Resource.Success->{
+                _searchKeyword.value = SearchStates.Success(result.data!!)
+            }
+            is Resource.Error-> _searchKeyword.value = SearchStates.Failure(result.message!!)
         }
     }
 
