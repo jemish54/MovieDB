@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
                 val tabs = listOf(
                     TabItem.MovieScreenTab(viewModel = viewModel),
                     TabItem.SeriesScreenTab(viewModel = viewModel),
-                    TabItem.MyListScreenTab(),
+                    TabItem.MyListScreenTab(viewModel = viewModel),
                     TabItem.SearchScreenTab(viewModel = viewModel),
                 )
                 val pagerState = rememberPagerState()

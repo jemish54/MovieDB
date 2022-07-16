@@ -1,5 +1,7 @@
 package com.example.moviedb.models
 
+import androidx.room.Entity
+
 data class Result(
     val adult: Boolean,
     val backdrop_path: String,

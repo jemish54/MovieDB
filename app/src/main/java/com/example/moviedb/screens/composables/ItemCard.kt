@@ -1,6 +1,7 @@
 package com.example.moviedb.screens.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -22,11 +23,13 @@ import com.example.moviedb.util.Constants
 val ratio:Float = 0.67f
 
 @Composable
-fun MovieCard(movie: Movie) {
+fun MovieCard(movie: Movie,onClick:()->Unit) {
     Card(
         shape = RoundedCornerShape(12.dp),
         elevation = 8.dp,
-        modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp)
+        modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp).clickable {
+            onClick()
+        }
     ) {
         Box(
             contentAlignment = Alignment.TopStart,

@@ -1,5 +1,6 @@
 package com.example.moviedb.models
 
+
 data class Series(
     val backdrop_path: String,
     val first_air_date: String,

@@ -1,17 +1,17 @@
 package com.example.moviedb.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import com.example.moviedb.models.*
 import com.example.moviedb.util.Resource
-import com.example.moviedb.models.MovieResponse
-import com.example.moviedb.models.SearchResponse
-import com.example.moviedb.models.SeriesResponse
-import com.example.moviedb.models.UpcomingMovieResponse
 import com.example.moviedb.network.EntertainmentApi
+import kotlinx.coroutines.flow.Flow
 import java.lang.Exception
 import javax.inject.Inject
 
 class DefaultMainRepository @Inject constructor(
-    private val entertainmentApi: EntertainmentApi
+    private val entertainmentApi: EntertainmentApi,
+    private val watchItemDao:WatchItemDao
 ) : MainRepository {
 
     override suspend fun getPopularMovies(): Resource<MovieResponse> {
@@ -98,5 +98,23 @@ class DefaultMainRepository @Inject constructor(
             Resource.Error(e.message ?: "An Unknown Error Occurred")
         }
     }
+
+    override fun getWatchList(): Resource<Flow<List<WatchItem>>> {
+        return try{
+            val result = watchItemDao.getAllWatchItems()
+            Resource.Success(result)
+        }catch (e:Exception){
+            Resource.Error(e.message)
+        }
+    }
+
+    override suspend fun insertWatchItem(watchItem: WatchItem) {
+        watchItemDao.insertItem(watchItem)
+    }
+
+    override suspend fun removeWatchItem(itemId:Int) {
+        watchItemDao.removeItem(itemId)
+    }
+
 
 }

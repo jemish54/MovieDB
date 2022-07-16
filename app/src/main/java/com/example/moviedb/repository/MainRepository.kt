@@ -1,7 +1,9 @@
 package com.example.moviedb.repository
 
+import androidx.lifecycle.LiveData
 import com.example.moviedb.models.*
 import com.example.moviedb.util.Resource
+import kotlinx.coroutines.flow.Flow
 
 interface MainRepository {
 
@@ -16,5 +18,11 @@ interface MainRepository {
     suspend fun getTopRatedSeries():Resource<SeriesResponse>
 
     suspend fun searchKeyword(query:String):Resource<SearchResponse>
+
+    fun getWatchList():Resource<Flow<List<WatchItem>>>
+
+    suspend fun insertWatchItem(watchItem: WatchItem)
+
+    suspend fun removeWatchItem(itemId:Int)
 
 }

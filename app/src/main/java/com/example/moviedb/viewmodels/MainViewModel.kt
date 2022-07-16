@@ -1,11 +1,13 @@
 package com.example.moviedb.viewmodels
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviedb.models.*
 import com.example.moviedb.repository.MainRepository
 import com.example.moviedb.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -38,6 +40,13 @@ class MainViewModel @Inject constructor(
         object Empty: SearchStates()
     }
 
+    sealed class WatchListStates{
+        class Success(val watchList: Flow<List<WatchItem>>): WatchListStates()
+        class Failure(val message:String): WatchListStates()
+        object Loading: WatchListStates()
+        object Empty: WatchListStates()
+    }
+
     private val _popularMovies = MutableStateFlow<MovieStates>(MovieStates.Empty)
     val popularMovies:StateFlow<MovieStates> = _popularMovies
 
@@ -56,12 +65,16 @@ class MainViewModel @Inject constructor(
     private val _searchKeyword = MutableStateFlow<SearchStates>(SearchStates.Empty)
     val searchKeyword:StateFlow<SearchStates> = _searchKeyword
 
+    private val _watchList = MutableStateFlow<WatchListStates>(WatchListStates.Empty)
+    val watchList:StateFlow<WatchListStates> = _watchList
+
     init {
         getPopularMovies()
         getTopRatedMovies()
         getUpcomingMovies()
         getPopularSeries()
         getTopRatedSeries()
+        getWatchList()
     }
 
     private fun getPopularMovies() = viewModelScope.launch {
@@ -121,6 +134,27 @@ class MainViewModel @Inject constructor(
                 _searchKeyword.value = SearchStates.Success(result.data!!)
             }
             is Resource.Error-> _searchKeyword.value = SearchStates.Failure(result.message!!)
+        }
+    }
+
+    private fun getWatchList() {
+        when(val result = mainRepository.getWatchList()){
+            is Resource.Success->{
+                _watchList.value = WatchListStates.Success(result.data!!)
+            }
+            is Resource.Error-> _searchKeyword.value = SearchStates.Failure(result.message!!)
+        }
+    }
+
+    fun insertWatchItem(watchItem:WatchItem){
+        viewModelScope.launch {
+            mainRepository.insertWatchItem(watchItem)
+        }
+    }
+
+    fun removeWatchItem(itemId:Int){
+        viewModelScope.launch {
+            mainRepository.removeWatchItem(itemId)
         }
     }
 

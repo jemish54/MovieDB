@@ -23,6 +23,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import com.example.moviedb.models.Movie
+import com.example.moviedb.models.WatchItem
 import com.example.moviedb.screens.composables.MovieCard
 import com.example.moviedb.util.Constants.Companion.IMAGE_BASE
 import com.example.moviedb.viewmodels.MainViewModel
@@ -105,8 +106,6 @@ fun HorizontalPagerWithDecoration(upcomingMovieList: List<Movie>) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PopularMoviesSection(viewModel: MainViewModel) {
-    val coroutineScope = rememberCoroutineScope()
-    val listState = rememberLazyListState();
     when (val data = viewModel.popularMovies.collectAsState().value) {
         MainViewModel.MovieStates.Empty -> {}
         is MainViewModel.MovieStates.Failure -> {
@@ -121,7 +120,6 @@ fun PopularMoviesSection(viewModel: MainViewModel) {
         }
         is MainViewModel.MovieStates.Success -> {
             LazyVerticalGrid(
-                state = listState,
                 cells = GridCells.Adaptive(150.dp),
                 contentPadding = PaddingValues(horizontal = 10.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -145,16 +143,11 @@ fun PopularMoviesSection(viewModel: MainViewModel) {
                     )
                 }
                 items(items = data.movieList.results) {
-                    MovieCard(it)
+                    MovieCard(it){viewModel.insertWatchItem(WatchItem(type = true, movie = it, series = null))}
                 }
             }
         }
         //Only for Upcoming(Not Released) movie list
         is MainViewModel.MovieStates.SuccessUpcoming -> {}
-    }
-    SideEffect {
-        coroutineScope.launch {
-            listState.scrollToItem(0)
-        }
     }
 }

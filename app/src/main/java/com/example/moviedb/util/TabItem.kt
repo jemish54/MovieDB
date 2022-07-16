@@ -17,8 +17,8 @@ sealed class TabItem(val title: String?,val icon:ImageVector?, val content: @Com
     class SeriesScreenTab(viewModel: MainViewModel) :
         TabItem("Series",null, { SeriesScreen(viewModel = viewModel) })
 
-    class MyListScreenTab() :
-        TabItem("Watchlist",null, { WatchListScreen() })
+    class MyListScreenTab(viewModel: MainViewModel) :
+        TabItem("Watchlist",null, { WatchListScreen(viewModel) })
 
     class SearchScreenTab(viewModel: MainViewModel) :
             TabItem(null,Icons.Default.Search,{ SearchScreen(viewModel) })
