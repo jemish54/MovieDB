@@ -6,11 +6,11 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "Watchlist")
 data class WatchItem(
-    @PrimaryKey(autoGenerate = true)
-    var itemId:Int = 0,
+    @PrimaryKey()
+    val itemId:Int,
     val type:Boolean,
     @Embedded(prefix = "movie_")
-    val movie: Movie?,
+    val movie: Movie? = null,
     @Embedded(prefix = "series_")
-    val series: Series?
+    val series: Series? = null
 )

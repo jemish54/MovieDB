@@ -143,7 +143,7 @@ fun PopularMoviesSection(viewModel: MainViewModel) {
                     )
                 }
                 items(items = data.movieList.results) {
-                    MovieCard(it){viewModel.insertWatchItem(WatchItem(type = true, movie = it, series = null))}
+                    MovieCard(it){viewModel.insertWatchItem(WatchItem(itemId = it.id,type = true, movie = it))}
                 }
             }
         }

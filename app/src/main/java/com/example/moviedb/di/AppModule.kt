@@ -43,7 +43,9 @@ object AppModule {
         app,
         AppDatabase::class.java,
         "WatchListDatabase"
-    ).build()
+    )
+        .fallbackToDestructiveMigration()
+        .build()
 
     @Singleton
     @Provides
