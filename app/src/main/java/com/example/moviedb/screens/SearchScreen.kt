@@ -14,24 +14,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.moviedb.models.ResultToMovie
+import com.example.moviedb.models.ResultToSeries
 import com.example.moviedb.screens.composables.SearchResultCard
+import com.example.moviedb.util.NavScreen
 import com.example.moviedb.viewmodels.MainViewModel
 
 @Composable
-fun SearchScreen(viewModel:MainViewModel) {
+fun SearchScreen(viewModel:MainViewModel,navController: NavController) {
     Column(modifier = Modifier.fillMaxSize()) {
         SearchBar{ before,after->
             if(after.length>before.length && after.isNotEmpty()){
                 viewModel.searchKeyword(after)
             }
         }
-        SearchResults(viewModel)
+        SearchResults(viewModel,navController)
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SearchResults(viewModel:MainViewModel) {
+fun SearchResults(viewModel:MainViewModel,navController: NavController) {
     when (val data = viewModel.searchKeyword.collectAsState().value) {
         MainViewModel.SearchStates.Empty -> {}
         is MainViewModel.SearchStates.Failure -> {
@@ -52,7 +56,19 @@ fun SearchResults(viewModel:MainViewModel) {
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 items(items = data.searchList.results) {
-                    SearchResultCard(searchResult = it)
+                    SearchResultCard(searchResult = it){
+                        when(it.media_type){
+                            "movie" -> {
+                                viewModel.setMovieDetails(ResultToMovie(it))
+                                navController.navigate(NavScreen.MovieDetailScreen.route)
+                            }
+                            "tv" -> {
+                                viewModel.setSeriesDetails(ResultToSeries(it))
+                                navController.navigate(NavScreen.SeriesDetailScreen.route)
+                            }
+                            else -> {}
+                        }
+                    }
                 }
             }
         }

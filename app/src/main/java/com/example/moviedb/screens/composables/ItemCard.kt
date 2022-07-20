@@ -58,11 +58,13 @@ fun MovieCard(movie: Movie,onClick:()->Unit) {
 }
 
 @Composable
-fun SeriesCard(series: Series) {
+fun SeriesCard(series: Series,onClick: () -> Unit) {
     Card(
         shape = RoundedCornerShape(12.dp),
         elevation = 8.dp,
-        modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp)
+        modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp).clickable {
+            onClick()
+        }
     ) {
         Box(
             contentAlignment = Alignment.TopStart,
@@ -91,11 +93,13 @@ fun SeriesCard(series: Series) {
 }
 
 @Composable
-fun SearchResultCard(searchResult: Result) {
+fun SearchResultCard(searchResult: Result,onClick: () -> Unit) {
     Card(
         shape = RoundedCornerShape(12.dp),
         elevation = 8.dp,
-        modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp)
+        modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp).clickable {
+            onClick()
+        }
     ) {
         Box(
             contentAlignment = Alignment.TopStart,

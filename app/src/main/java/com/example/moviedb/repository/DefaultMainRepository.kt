@@ -90,6 +90,7 @@ class DefaultMainRepository @Inject constructor(
             val response = entertainmentApi.searchKeyword(query = query)
             val result = response.body()
             if(response.isSuccessful && result != null){
+                result.results = result.results.filter { it.media_type!="person" }
                 Resource.Success(result)
             }else{
                 Resource.Error(response.message())

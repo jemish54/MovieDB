@@ -20,10 +20,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import coil.compose.AsyncImage
 import com.example.moviedb.models.Movie
+import com.example.moviedb.screens.MovieDetailScreen
+import com.example.moviedb.screens.SeriesDetailScreen
 import com.example.moviedb.ui.theme.MovieDBTheme
 import com.example.moviedb.util.Constants.Companion.IMAGE_BASE
+import com.example.moviedb.util.NavScreen
 import com.example.moviedb.util.TabItem
 import com.example.moviedb.viewmodels.MainViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -41,19 +50,30 @@ class MainActivity : ComponentActivity() {
         val viewModel: MainViewModel by viewModels()
         setContent {
             MovieDBTheme {
+                val navController = rememberNavController()
                 val tabs = listOf(
-                    TabItem.MovieScreenTab(viewModel = viewModel),
-                    TabItem.SeriesScreenTab(viewModel = viewModel),
-                    TabItem.MyListScreenTab(viewModel = viewModel),
-                    TabItem.SearchScreenTab(viewModel = viewModel),
+                    TabItem.MovieScreenTab(viewModel,navController),
+                    TabItem.SeriesScreenTab(viewModel,navController),
+                    TabItem.MyListScreenTab(viewModel,navController),
+                    TabItem.SearchScreenTab(viewModel,navController),
                 )
                 val pagerState = rememberPagerState()
                 Scaffold {
                     Column(modifier = Modifier.fillMaxSize()) {
-                        TabNavigation(tabs = tabs, pagerState = pagerState)
-
+                        NavHost(
+                            navController = navController,
+                            startDestination = NavScreen.MainScreen.route
+                        ) {
+                            composable(NavScreen.MainScreen.route) { TabNavigation(
+                                tabs = tabs,
+                                pagerState = pagerState
+                            ) }
+                            composable(NavScreen.MovieDetailScreen.route) { MovieDetailScreen(viewModel,navController) }
+                            composable(NavScreen.SeriesDetailScreen.route) { SeriesDetailScreen(viewModel,navController) }
+                        }
                     }
                 }
+
             }
         }
     }

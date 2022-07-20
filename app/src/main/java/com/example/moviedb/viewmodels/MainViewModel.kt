@@ -68,6 +68,12 @@ class MainViewModel @Inject constructor(
     private val _watchList = MutableStateFlow<WatchListStates>(WatchListStates.Empty)
     val watchList:StateFlow<WatchListStates> = _watchList
 
+    private val _movieDetail = MutableStateFlow<Movie?>(null)
+    val movieDetail:StateFlow<Movie?> = _movieDetail
+
+    private val _seriesDetail = MutableStateFlow<Series?>(null)
+    val seriesDetail:StateFlow<Series?> = _seriesDetail
+
     init {
         getPopularMovies()
         getTopRatedMovies()
@@ -131,7 +137,9 @@ class MainViewModel @Inject constructor(
         _searchKeyword.value = SearchStates.Loading
         when(val result = mainRepository.searchKeyword(query)){
             is Resource.Success->{
-                _searchKeyword.value = SearchStates.Success(result.data!!)
+                val searchResults =  SearchStates.Success(result.data!!)
+                searchResults.searchList.results.filter { it.media_type!="person" }
+                _searchKeyword.value = searchResults
             }
             is Resource.Error-> _searchKeyword.value = SearchStates.Failure(result.message!!)
         }
@@ -157,5 +165,9 @@ class MainViewModel @Inject constructor(
             mainRepository.removeWatchItem(itemId)
         }
     }
+
+    fun setMovieDetails(movie:Movie){ _movieDetail.value = movie }
+
+    fun setSeriesDetails(series:Series){ _seriesDetail.value = series }
 
 }

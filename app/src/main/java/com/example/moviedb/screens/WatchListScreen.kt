@@ -3,7 +3,6 @@ package com.example.moviedb.screens
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.GridItemSpan
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
@@ -12,23 +11,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.moviedb.screens.composables.MovieCard
 import com.example.moviedb.screens.composables.SeriesCard
+import com.example.moviedb.util.NavScreen
 import com.example.moviedb.viewmodels.MainViewModel
-import java.nio.file.WatchEvent
 
 @Composable
-fun WatchListScreen(viewModel: MainViewModel) {
-    WatchListSection(viewModel = viewModel)
+fun WatchListScreen(viewModel: MainViewModel,navController: NavController) {
+    WatchListSection(viewModel,navController)
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun WatchListSection(viewModel: MainViewModel) {
+fun WatchListSection(viewModel: MainViewModel,navController: NavController) {
     when (val data = viewModel.watchList.collectAsState().value) {
         MainViewModel.WatchListStates.Empty -> {}
         is MainViewModel.WatchListStates.Failure -> {
@@ -59,7 +56,9 @@ fun WatchListSection(viewModel: MainViewModel) {
                         if(it.type) MovieCard(movie = it.movie!!){
                             viewModel.removeWatchItem(it.itemId)
                         }
-                        else SeriesCard(series = it.series!!)
+                        else SeriesCard(series = it.series!!){
+                            viewModel.removeWatchItem(it.itemId)
+                        }
                     }
                 }
             }
