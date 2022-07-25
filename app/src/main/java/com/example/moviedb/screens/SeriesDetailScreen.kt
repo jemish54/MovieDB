@@ -12,6 +12,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -45,6 +46,10 @@ fun SeriesDetailScreen(viewModel: MainViewModel,navController: NavController){
 @Composable
 fun DetailView(series: Series, navController: NavController, viewModel: MainViewModel) {
 
+    var inWatchList by remember {
+        mutableStateOf(series.in_watchlist)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -55,13 +60,19 @@ fun DetailView(series: Series, navController: NavController, viewModel: MainView
                 .fillMaxWidth()
                 .aspectRatio(0.7f),
         ) {
-            AsyncImage(
-                model = "${Constants.IMAGE_BASE}${series.poster_path}",
-                contentDescription = "Movie Poster",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.Center
-            )
+            series.poster_path?.let {
+                AsyncImage(
+                    model = "${Constants.IMAGE_BASE}${it}",
+                    contentDescription = "Movie Poster",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.Center
+                )
+            } ?: Box(
+                modifier = Modifier.fillMaxSize().align(Alignment.Center)
+            ){
+                Text("No Poster Available")
+            }
             IconButton(
                 onClick = {
                     navController.popBackStack()
@@ -99,16 +110,22 @@ fun DetailView(series: Series, navController: NavController, viewModel: MainView
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = {
-                    viewModel.insertWatchItem(
-                        WatchItem(
-                            itemId = series.id,
-                            type = true,
-                            series = series
+                    if(inWatchList){
+                        viewModel.removeWatchItem(series.id)
+                    }else{
+                        viewModel.insertWatchItem(
+                            WatchItem(
+                                itemId = series.id,
+                                type = false,
+                                series = series
+                            )
                         )
-                    )
+                    }
+                    series.in_watchlist = !series.in_watchlist
+                    inWatchList = !inWatchList
                 }) {
                     Icon(
-                        imageVector = Icons.Default.AddCircle,
+                        imageVector = if(inWatchList) Icons.Default.Delete else Icons.Default.AddCircle,
                         contentDescription = "Add to WatchList"
                     )
                 }

@@ -60,7 +60,6 @@ class DefaultMainRepository @Inject constructor(
         return try{
             val response = entertainmentApi.getPopularSeries()
             val result = response.body()
-            Log.d("SeriesListDisplay", result.toString())
             if(response.isSuccessful && result != null){
                 Resource.Success(result)
             }else{

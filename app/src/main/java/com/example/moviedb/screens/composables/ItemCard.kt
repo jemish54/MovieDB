@@ -23,7 +23,7 @@ import com.example.moviedb.util.Constants
 val ratio:Float = 0.67f
 
 @Composable
-fun MovieCard(movie: Movie,onClick:()->Unit) {
+fun MovieCard(movie:Movie,onClick:()->Unit) {
     Card(
         shape = RoundedCornerShape(12.dp),
         elevation = 8.dp,

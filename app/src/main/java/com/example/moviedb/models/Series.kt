@@ -2,7 +2,7 @@ package com.example.moviedb.models
 
 
 data class Series(
-    val backdrop_path: String,
+    val backdrop_path: String?,
     val first_air_date: String,
     val genre_ids: List<Int>,
     val id: Int,
@@ -12,7 +12,8 @@ data class Series(
     val original_name: String,
     val overview: String,
     val popularity: Double,
-    val poster_path: String,
+    val poster_path: String?,
     val vote_average: Double,
-    val vote_count: Int
+    val vote_count: Int,
+    var in_watchlist: Boolean = false
 )

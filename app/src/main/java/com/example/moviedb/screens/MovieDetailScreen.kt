@@ -12,10 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,6 +46,10 @@ fun MovieDetailScreen(viewModel: MainViewModel, navController: NavController) {
 @Composable
 fun DetailView(movie: Movie, navController: NavController, viewModel: MainViewModel) {
 
+    var inWatchList by remember {
+        mutableStateOf(movie.in_watchlist)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -59,13 +60,20 @@ fun DetailView(movie: Movie, navController: NavController, viewModel: MainViewMo
                 .fillMaxWidth()
                 .aspectRatio(0.7f),
         ) {
-            AsyncImage(
-                model = "$IMAGE_BASE${movie.poster_path}",
-                contentDescription = "Movie Poster",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.Center
-            )
+            movie.poster_path?.let {
+                AsyncImage(
+                    model = "$IMAGE_BASE${it}",
+                    contentDescription = "Movie Poster",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.Center
+                )
+            } ?: Box(
+                modifier = Modifier.fillMaxSize().align(Alignment.Center)
+            ){
+                Text("No Poster Available", color = MaterialTheme.colors.onSurface)
+            }
+
             IconButton(
                 onClick = {
                     navController.popBackStack()
@@ -103,16 +111,22 @@ fun DetailView(movie: Movie, navController: NavController, viewModel: MainViewMo
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = {
-                    viewModel.insertWatchItem(
-                        WatchItem(
-                            itemId = movie.id,
-                            type = true,
-                            movie = movie
+                    if(inWatchList){
+                        viewModel.removeWatchItem(movie.id)
+                    }else{
+                        viewModel.insertWatchItem(
+                            WatchItem(
+                                itemId = movie.id,
+                                type = true,
+                                movie = movie
+                            )
                         )
-                    )
+                    }
+                    movie.in_watchlist = !movie.in_watchlist
+                    inWatchList = !inWatchList
                 }) {
                     Icon(
-                        imageVector = Icons.Default.AddCircle,
+                        imageVector = if(inWatchList) Icons.Default.Delete else Icons.Default.AddCircle,
                         contentDescription = "Add to WatchList"
                     )
                 }
@@ -175,7 +189,7 @@ fun ChipText(
             }
             Text(
                 text,
-                color = Color.White,
+                color = MaterialTheme.colors.onSurface,
                 fontSize = fontSize,
             )
         }

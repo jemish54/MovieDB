@@ -1,5 +1,6 @@
 package com.example.moviedb.screens
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
@@ -40,6 +41,7 @@ fun WatchListSection(viewModel: MainViewModel,navController: NavController) {
         }
         is MainViewModel.WatchListStates.Success -> {
             val watchlist = data.watchList.collectAsState(initial = mutableListOf()).value
+            Log.d("WATCHLIST", "WatchListSection: $watchlist")
             if (watchlist.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text("Add Something")
@@ -53,11 +55,16 @@ fun WatchListSection(viewModel: MainViewModel,navController: NavController) {
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     items(items = watchlist) {
-                        if(it.type) MovieCard(movie = it.movie!!){
-                            viewModel.removeWatchItem(it.itemId)
-                        }
-                        else SeriesCard(series = it.series!!){
-                            viewModel.removeWatchItem(it.itemId)
+                        if(it.type) {
+                            MovieCard(movie = it.movie!!){
+                                viewModel.setMovieDetails(it.movie)
+                                navController.navigate(NavScreen.MovieDetailScreen.route)
+                            }
+                        } else {
+                            SeriesCard(series = it.series!!){
+                                viewModel.setSeriesDetails(it.series)
+                                navController.navigate(NavScreen.SeriesDetailScreen.route)
+                            }
                         }
                     }
                 }
